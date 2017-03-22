@@ -1,0 +1,66 @@
+/**
+* Class to define matrix objects with a fixed number of rows and columns.
+* Needed since Jack does not support 2-dimensional arrays.
+* The matrix contains int values.
+*/
+
+class Matrix {
+
+  field int rows; // number of rows in the matrix
+  field int cols; // number of columns in the matrix
+  field Array cells; // matrix is a 2-dimensional array of ints
+  field Array row; // intermediary variable used to access a cell value
+
+  constructor Matrix new (int r, int c) {
+    var int i;
+
+    let rows = r;
+    let cols = c;
+
+    // the matrix is comprised of array(s); each array represents a row
+    let cells = Array.new(rows);
+
+    let i = 0;
+
+    // each row in the matrix is itself an array of ints
+    while (i < rows) {
+      let cells[i] = Array.new(cols);
+      let i = i + 1;
+    }
+
+    return this;
+  }
+
+  /** Gets the value for a cell at row = r, col = c */
+  method int get(int r, int c) {
+    let row = cells[r];
+
+    return row[c];
+  }
+
+  /** Sets the value of the cell at row = r, col = c */
+  method void set(int r, int c, int val) {
+    let row = cells[r];
+    let row[c] = val;
+
+    return;
+  }
+
+  /** Disposes this matrix */
+  method void dispose() {
+    var int i;
+
+    let i = 0;
+
+    while (i < rows) {
+      let row = cells[i];
+      do row.dispose();
+      let i = i + 1;
+    }
+
+    do cells.dispose();
+    do row.dispose();
+    do Memory.deAlloc(this);
+    return;
+  }
+}

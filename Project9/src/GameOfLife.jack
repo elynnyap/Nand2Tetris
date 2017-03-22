@@ -1,0 +1,119 @@
+/**
+* Implements a simulation of Conway's Game of Life.
+* The program prompts the user for a number, x, between 1-9, indicating how
+* heavily the board should be populated (1 being least populated and 9 being
+* most populated.)
+* A 56x28 grid will then be shown on the screen. Live cells are black and dead
+* cells are white.
+* At each step in time, the following transitions occur:
+* 1. Any live cell with fewer than two live neighbours dies, as if caused by 
+* underpopulation.
+* 2. Any live cell with two or three live neighbours lives on to the next 
+* generation.
+* 3. Any live cell with more than three live neighbours dies, as if by 
+* overpopulation.
+* 4. Any dead cell with exactly three live neighbours becomes a live cell, 
+* as if by reproduction.
+* The simulation restarts when the player presses the 'z' key.
+* The player can then choose a number between 1-9 again to start a new 
+* simulation.
+* Pressing the 'q' key during the simulation causes the program to stop.
+*/
+
+class GameOfLife {
+
+  field CellCollection cells; // matrix of dead and live cells
+  field String line1; // instructions shown to user at start
+  field String line2;
+  field String line3;
+  field String line4;
+
+  /** Constructs a new game */
+  constructor GameOfLife new() {
+    let line1 = "Welcome to Conway's Game of Life!";
+    let line2 = "Press a number from 1 to 9 to start the simulation.";
+    let line3 = "1 is least populated and 9 is most populated.";
+    let line4 = "During the simulation, press z to restart and q to quit.";
+    return this;
+  }
+
+  /* Runs the game: handles the user's input and updates the simulation
+  * accordingly */
+  method void run() {
+    var boolean exit, reset;
+    var char key; // the key pressed by the user
+    var int val; // indicates % of grid that's live
+
+    let exit = false;
+    let reset = true;
+    let key = 0;
+
+    while (~exit) {
+
+      do Screen.clearScreen();
+
+      // display the instructions to the user
+      do Output.moveCursor(5, 3);
+      do Output.printString(line1);
+      do Output.moveCursor(10, 3);
+      do Output.printString(line2);
+      do Output.moveCursor(15, 3);
+      do Output.printString(line3);
+      do Output.moveCursor(20, 3);
+      do Output.printString(line4);
+
+      // waits till player has pressed key for number between 1-9
+      while ((key < 49) | (key > 57)) {
+        let key = Keyboard.keyPressed();
+      }
+
+      let val = Keyboard.keyPressed() - 48;
+
+      // create grid of cells based on user's input
+      let cells = CellCollection.new(56, 28, 8, val);
+
+      let reset = false;
+      let key = 0;
+
+      do Screen.clearScreen();
+
+      // start the simulation
+      while ((~reset) & (~exit)) {
+
+        while (key = 0) {
+          // check if user has pressed a key
+          let key = Keyboard.keyPressed();
+
+          // draw the live and dead cells
+          do cells.draw();
+
+          if (key = 0) { let key = Keyboard.keyPressed(); }
+
+          // update the cells for the next iteration
+          do cells.update();
+
+          if (key = 0) { let key = Keyboard.keyPressed(); }
+        }
+
+        if (key = 90) { let reset = true; } // z key
+        if (key = 81) { let exit = true; } // q key
+        let key = 0;
+      }
+
+      do cells.dispose();
+    }
+
+    return;
+  }
+
+  /* Disposes this game object. */
+  method void dispose() {
+    do line1.dispose();
+    do line2.dispose();
+    do line3.dispose();
+    do line4.dispose();
+    do cells.dispose();
+    do Memory.deAlloc(this);
+    return;
+  }
+}

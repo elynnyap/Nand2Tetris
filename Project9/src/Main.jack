@@ -1,0 +1,11 @@
+/** Initializes a new GameOfLife game and starts running it. */
+
+class Main {
+  function void main() {
+    var GameOfLife game;
+    let game = GameOfLife.new();
+    do game.run();
+    do game.dispose();
+    return;
+  }
+}

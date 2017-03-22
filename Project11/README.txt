@@ -1,0 +1,62 @@
+Description:
+------------
+
+This program is a compiler that compiles Jack files to VM code. It operates on a single .jack file or a directory containing one or more .jack files to produce a .vm output file for each input file.
+
+To compile:
+-----------
+
+1. In terminal, cd into the src/ directory.
+
+2. Then, type the command:
+
+javac JackCompiler/*.java
+
+This should compile all the files in the package.
+
+If that doesn't work, then compile the files individually:
+
+javac JackCompiler/CompilationEngine.java
+javac JackCompiler/JackCompiler.java
+javac JackCompiler/JackTokenizer.java
+javac JackCompiler/SymbolTable.java
+javac JackCompiler/VMWriter.java
+
+JackCompiler is the driving class for the program.
+
+To run:
+--------
+
+1. While you are still in the src/ directory in terminal, type the command:
+
+java JackCompiler/JackCompiler somepath/filename.jack
+
+OR
+
+java JackCompiler/JackCompiler somepath/somedirectory/
+
+- Use the first command if you want to parse a single .jack file. Use the second command if you want to parse multiple .jack files in the same directory.
+
+- If you supply a directory name rather than a file name as an argument, this directory must contain at least one .jack file in its root. E.g. if the path of your .jack file is /Users/yourname/code/files/filename.jack, and you type java JackCompiler/JackCompiler Users/yourname/code/, this will not work. The program will throw an exception and exit.
+
+- Note that "somepath/" is the path (relative to the directory where you're running java from) where the .jack file or directory containing .jack file(s) is located.
+
+For example, if you are in /Users/yourname/code/YapE-LynnProject11/src, and you type:
+
+java JackCompiler/JackCompiler ../../Test.jack
+
+Then the program will translate the file /Users/yourname/code/Test.jack.
+
+- If the file that you want to translate is located in the src/ directory (i.e. the same directory that you're running java from), then type:
+
+java JackCompiler/JackCompiler Test.jack
+
+- If the path and/or file or directory name you have supplied is invalid, the program will throw an exception.
+
+- If the path and filename are valid, then the program will create the output .xml file in the same directory as the original .jack file. If you supplied a directory name instead of a filename and it contains at least one .jack file, then the program will create one .xml file per .jack file in the directory you supplied.
+
+- The text file(s) supplied must be saved using the .jack extension. No other file extensions will be allowed.
+
+Note:
+------
+- This program will throw an exception and exit if the input .jack file contains any grammatically incorrect constructs.

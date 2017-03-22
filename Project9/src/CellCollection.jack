@@ -1,0 +1,153 @@
+class CellCollection {
+
+  field int rows; // number of rows in the cell collection
+  field int cols; // number of columns
+  field int cellSize; // size of each cell
+  field Matrix cells; // matrix holding the cell values
+
+  /** Constructs a collection of cells with a specified % alive. */
+  constructor CellCollection new (int c, int r, int size, int n) {
+    var int i, j, counter, rand;
+
+    let cols = c;
+    let rows = r;
+    let cellSize = size;
+    let cells = Matrix.new(rows, cols);
+    let i = 0;
+    let j = 0;
+
+    let counter = 1;
+    do Random.setSeed(counter);
+
+    // populate the matrix with 10n% of cells as being alive
+    while (i < rows) {
+      while (j < cols) {
+
+        let rand = Random.randRange(9);
+
+        if (rand < n) {
+          do cells.set(i, j, 1);
+        } else {
+          do cells.set(i, j, 0);
+        }
+
+        let j = j + 1;
+        let counter = counter + 7;
+
+        do Random.setSeed(counter);
+      }
+      let i = i + 1;
+      let j = 0;
+    }
+
+    return this;
+  }
+
+  /** Draws the cells on the screen */
+  method void draw() {
+    var int i, j;
+    var int x, y;
+
+    let i = 0;
+    let j = 0;
+
+    while (i < rows) {
+      while (j < cols) {
+        let x = cellSize + 1 * j;
+        let y = cellSize + 1 * i;
+        if ((cells.get(i,j) & 1) = 1) { // value of 1 indicates live
+          do Screen.setColor(true);
+        } else { // value of 0 indicates dead
+          do Screen.setColor(false);
+        }
+        do Screen.drawRectangle (x, y, x + cellSize, y + cellSize);
+        let j = j + 1;
+      }
+      let i = i + 1;
+      let j = 0;
+    }
+
+    return;
+  }
+
+  /** Updates the cells for the next iteration.
+  * This update is done in-place: the LSB represents the current state
+  * of the cell while the MSB represents the updated state of the cell.
+  * Once we have iterated through all the cells to update their MSB,
+  * we perform a right bitwise shift on the values to get rid of the LSB.
+  */
+  method void update() {
+    var int i, j, live;
+
+    let i = 0;
+    let j = 0;
+
+    while (i < rows) {
+      while (j < cols) {
+        let live = countLiveNeighbors(i, j);
+        if ((cells.get(i,j) & 1) = 1) { // if LSB = 1, then cell currently live
+          if ((live = 2) | (live = 3)) {
+            do cells.set(i, j, 3);
+          }
+        } else { // LSB = 0 i.e. cell currently dead
+          if (live = 3) {
+            do cells.set(i, j, 2);
+          }
+        } // no need to update cells which are dead in the next iteration bc
+        // MSB is 0 by default.
+        let j = j + 1;
+      }
+      let i = i + 1;
+      let j = 0;
+    }
+
+    let i = 0;
+    let j = 0;
+
+    // perform a right bitwise shift on all cell values to get MSB
+    while (i < rows) {
+      while (j < cols) {
+        let live = cells.get(i,j) / 2;
+        do cells.set(i, j, live);
+        let j = j + 1;
+      }
+      let i = i + 1;
+      let j = 0;
+    }
+
+    return;
+  }
+
+  /** Counts the number of live neighbors a cell has */
+  method int countLiveNeighbors(int r, int c) {
+    var int r1, c1, r2, c2, count;
+
+    // ensure we do not go out of bounds e.g. if cell is at edge
+    let r1 = Math.max(0, r-1);
+    let r2 = Math.min(28, r+2);
+    let c1 = Math.max(0, c-1);
+    let c2 = Math.min(56, c+2);
+
+    // iterate through the 9-cell neighborhood of the cell, inc itself
+    while (r1 < r2) {
+      while (c1 < c2) {
+        if ((cells.get(r1, c1) & 1) = 1) { let count = count + 1; }
+        let c1 = c1 + 1;
+      }
+      let r1 = r1 + 1;
+      let c1 = Math.max(0, c-1);
+    }
+
+    // since we iterated over the cell itself, subtract if it was alive
+    if ((cells.get(r,c) & 1) = 1) { let count = count - 1; }
+
+    return count;
+  }
+
+  /** Disposes this matrix. */
+  method void dispose() {
+    do cells.dispose();
+    do Memory.deAlloc(this);
+    return;
+  }
+}

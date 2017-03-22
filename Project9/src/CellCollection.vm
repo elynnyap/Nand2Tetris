@@ -1,0 +1,389 @@
+function CellCollection.new 4
+push constant 4
+call Memory.alloc 1
+pop pointer 0
+push argument 0
+pop this 1
+push argument 1
+pop this 0
+push argument 2
+pop this 2
+push this 0
+push this 1
+call Matrix.new 2
+pop this 3
+push constant 0
+pop local 0
+push constant 0
+pop local 1
+push constant 1
+pop local 2
+push local 2
+call Random.setSeed 1
+pop temp 0
+label WHILE_EXP0
+push local 0
+push this 0
+lt
+not
+if-goto WHILE_END0
+label WHILE_EXP1
+push local 1
+push this 1
+lt
+not
+if-goto WHILE_END1
+push constant 9
+call Random.randRange 1
+pop local 3
+push local 3
+push argument 3
+lt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push this 3
+push local 0
+push local 1
+push constant 1
+call Matrix.set 4
+pop temp 0
+goto IF_END0
+label IF_FALSE0
+push this 3
+push local 0
+push local 1
+push constant 0
+call Matrix.set 4
+pop temp 0
+label IF_END0
+push local 1
+push constant 1
+add
+pop local 1
+push local 2
+push constant 7
+add
+pop local 2
+push local 2
+call Random.setSeed 1
+pop temp 0
+goto WHILE_EXP1
+label WHILE_END1
+push local 0
+push constant 1
+add
+pop local 0
+push constant 0
+pop local 1
+goto WHILE_EXP0
+label WHILE_END0
+push pointer 0
+return
+function CellCollection.draw 4
+push argument 0
+pop pointer 0
+push constant 0
+pop local 0
+push constant 0
+pop local 1
+label WHILE_EXP0
+push local 0
+push this 0
+lt
+not
+if-goto WHILE_END0
+label WHILE_EXP1
+push local 1
+push this 1
+lt
+not
+if-goto WHILE_END1
+push this 2
+push constant 1
+add
+push local 1
+call Math.multiply 2
+pop local 2
+push this 2
+push constant 1
+add
+push local 0
+call Math.multiply 2
+pop local 3
+push this 3
+push local 0
+push local 1
+call Matrix.get 3
+push constant 1
+and
+push constant 1
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+goto IF_END0
+label IF_FALSE0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+label IF_END0
+push local 2
+push local 3
+push local 2
+push this 2
+add
+push local 3
+push this 2
+add
+call Screen.drawRectangle 4
+pop temp 0
+push local 1
+push constant 1
+add
+pop local 1
+goto WHILE_EXP1
+label WHILE_END1
+push local 0
+push constant 1
+add
+pop local 0
+push constant 0
+pop local 1
+goto WHILE_EXP0
+label WHILE_END0
+push constant 0
+return
+function CellCollection.update 3
+push argument 0
+pop pointer 0
+push constant 0
+pop local 0
+push constant 0
+pop local 1
+label WHILE_EXP0
+push local 0
+push this 0
+lt
+not
+if-goto WHILE_END0
+label WHILE_EXP1
+push local 1
+push this 1
+lt
+not
+if-goto WHILE_END1
+push pointer 0
+push local 0
+push local 1
+call CellCollection.countLiveNeighbors 3
+pop local 2
+push this 3
+push local 0
+push local 1
+call Matrix.get 3
+push constant 1
+and
+push constant 1
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push local 2
+push constant 2
+eq
+push local 2
+push constant 3
+eq
+or
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push this 3
+push local 0
+push local 1
+push constant 3
+call Matrix.set 4
+pop temp 0
+label IF_FALSE1
+goto IF_END0
+label IF_FALSE0
+push local 2
+push constant 3
+eq
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push this 3
+push local 0
+push local 1
+push constant 2
+call Matrix.set 4
+pop temp 0
+label IF_FALSE2
+label IF_END0
+push local 1
+push constant 1
+add
+pop local 1
+goto WHILE_EXP1
+label WHILE_END1
+push local 0
+push constant 1
+add
+pop local 0
+push constant 0
+pop local 1
+goto WHILE_EXP0
+label WHILE_END0
+push constant 0
+pop local 0
+push constant 0
+pop local 1
+label WHILE_EXP2
+push local 0
+push this 0
+lt
+not
+if-goto WHILE_END2
+label WHILE_EXP3
+push local 1
+push this 1
+lt
+not
+if-goto WHILE_END3
+push this 3
+push local 0
+push local 1
+call Matrix.get 3
+push constant 2
+call Math.divide 2
+pop local 2
+push this 3
+push local 0
+push local 1
+push local 2
+call Matrix.set 4
+pop temp 0
+push local 1
+push constant 1
+add
+pop local 1
+goto WHILE_EXP3
+label WHILE_END3
+push local 0
+push constant 1
+add
+pop local 0
+push constant 0
+pop local 1
+goto WHILE_EXP2
+label WHILE_END2
+push constant 0
+return
+function CellCollection.countLiveNeighbors 5
+push argument 0
+pop pointer 0
+push constant 0
+push argument 1
+push constant 1
+sub
+call Math.max 2
+pop local 0
+push constant 28
+push argument 1
+push constant 2
+add
+call Math.min 2
+pop local 2
+push constant 0
+push argument 2
+push constant 1
+sub
+call Math.max 2
+pop local 1
+push constant 56
+push argument 2
+push constant 2
+add
+call Math.min 2
+pop local 3
+label WHILE_EXP0
+push local 0
+push local 2
+lt
+not
+if-goto WHILE_END0
+label WHILE_EXP1
+push local 1
+push local 3
+lt
+not
+if-goto WHILE_END1
+push this 3
+push local 0
+push local 1
+call Matrix.get 3
+push constant 1
+and
+push constant 1
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push local 4
+push constant 1
+add
+pop local 4
+label IF_FALSE0
+push local 1
+push constant 1
+add
+pop local 1
+goto WHILE_EXP1
+label WHILE_END1
+push local 0
+push constant 1
+add
+pop local 0
+push constant 0
+push argument 2
+push constant 1
+sub
+call Math.max 2
+pop local 1
+goto WHILE_EXP0
+label WHILE_END0
+push this 3
+push argument 1
+push argument 2
+call Matrix.get 3
+push constant 1
+and
+push constant 1
+eq
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push local 4
+push constant 1
+sub
+pop local 4
+label IF_FALSE1
+push local 4
+return
+function CellCollection.dispose 0
+push argument 0
+pop pointer 0
+push this 3
+call Matrix.dispose 1
+pop temp 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+push constant 0
+return
